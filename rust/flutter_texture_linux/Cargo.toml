@@ -1,0 +1,7 @@
+[package]
+name = "flutter_texture_linux"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+flutter_texture_core = {path="../flutter_texture_core"}

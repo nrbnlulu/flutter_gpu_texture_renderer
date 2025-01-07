@@ -1,0 +1,8 @@
+[workspace]
+resolver = "2"
+
+members = [
+    "flutter_texture_core", "flutter_texture_linux",
+]
+
+dependencies = { anyhow = "1.0.95" }

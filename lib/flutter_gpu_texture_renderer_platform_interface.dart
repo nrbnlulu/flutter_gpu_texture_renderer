@@ -8,8 +8,7 @@ abstract class FlutterGpuTextureRendererPlatform extends PlatformInterface {
 
   static final Object _token = Object();
 
-  static FlutterGpuTextureRendererPlatform _instance =
-      MethodChannelFlutterGpuTextureRenderer();
+  static FlutterGpuTextureRendererPlatform _instance = MethodChannelFlutterGpuTextureRenderer();
 
   /// The default instance of [FlutterGpuTextureRendererPlatform] to use.
   ///
@@ -24,19 +23,7 @@ abstract class FlutterGpuTextureRendererPlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  Future<int?> registerTexture() {
-    throw UnimplementedError('registerTexture() has not been implemented.');
-  }
-
-  Future<int?> unregisterTexture(int id) {
-    throw UnimplementedError('unregisterTexture() has not been implemented.');
-  }
-
-  Future<int?> output(int id) {
-    throw UnimplementedError('output() has not been implemented.');
-  }
-
-  Future<int?> fps(int id) {
-    throw UnimplementedError('fps() has not been implemented.');
+  Future<String?> getPlatformVersion() {
+    throw UnimplementedError('platformVersion() has not been implemented.');
   }
 }

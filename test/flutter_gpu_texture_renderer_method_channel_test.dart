@@ -3,19 +3,22 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_gpu_texture_renderer/flutter_gpu_texture_renderer_method_channel.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   MethodChannelFlutterGpuTextureRenderer platform = MethodChannelFlutterGpuTextureRenderer();
   const MethodChannel channel = MethodChannel('flutter_gpu_texture_renderer');
 
-  TestWidgetsFlutterBinding.ensureInitialized();
-
   setUp(() {
-    channel.setMockMethodCallHandler((MethodCall methodCall) async {
-      return '42';
-    });
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
+      channel,
+      (MethodCall methodCall) async {
+        return '42';
+      },
+    );
   });
 
   tearDown(() {
-    channel.setMockMethodCallHandler(null);
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(channel, null);
   });
 
   test('getPlatformVersion', () async {
