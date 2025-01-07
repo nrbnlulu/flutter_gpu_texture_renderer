@@ -5,4 +5,4 @@ members = [
     "flutter_texture_core", "flutter_texture_linux",
 ]
 
-dependencies = { anyhow = "1.0.95" }
+dependencies = { anyhow = "1.0.95", bindgen = "0.71.1", lazy_static = "1.5.0" }
