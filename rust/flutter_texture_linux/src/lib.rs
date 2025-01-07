@@ -10,7 +10,6 @@ fn add_five(x: i32) -> i32 {
 
 #[cfg(test)]
 mod tests {
-    use bindings::take_five;
 
     use super::*;
 
