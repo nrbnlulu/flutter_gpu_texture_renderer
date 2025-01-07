@@ -24,61 +24,34 @@ add_library(${PLUGIN_NAME} SHARED
 option(RustBuild "RustBuild" OFF)
 set(EPHEMERAL_DIR "" CACHE PATH "Path to the ephemeral directory")
 
-if(RustBuild)
-  message("ephemeral is ${EPHEMERAL_DIR}")
-  if(NOT EPHEMERAL_DIR)
-    message(FATAL_ERROR "EPHEMERAL_DIR must be set when building with Rust")
-  endif()
-  find_package(PkgConfig REQUIRED)
-  pkg_check_modules(GTK REQUIRED IMPORTED_TARGET gtk+-3.0)
-  pkg_check_modules(GLIB REQUIRED IMPORTED_TARGET glib-2.0)
-  pkg_check_modules(GIO REQUIRED IMPORTED_TARGET gio-2.0)
-  set(FLUTTER_LIBRARY "${EPHEMERAL_DIR}/libflutter_linux_gtk.so")
+# if(RustBuild)
+#   message("ephemeral is ${EPHEMERAL_DIR}")
+#   if(NOT EPHEMERAL_DIR)
+#     message(FATAL_ERROR "EPHEMERAL_DIR must be set when building with Rust")
+#   endif()
+#   find_package(PkgConfig REQUIRED)
+#   pkg_check_modules(GTK REQUIRED IMPORTED_TARGET gtk+-3.0)
+#   pkg_check_modules(GLIB REQUIRED IMPORTED_TARGET glib-2.0)
+#   pkg_check_modules(GIO REQUIRED IMPORTED_TARGET gio-2.0)
+#   set(FLUTTER_LIBRARY "${EPHEMERAL_DIR}/libflutter_linux_gtk.so")
 
-  # Published to parent scope for install step.
-  set(FLUTTER_LIBRARY ${FLUTTER_LIBRARY} )
-  set(FLUTTER_ICU_DATA_FILE "${EPHEMERAL_DIR}/icudtl.dat" )
-  set(PROJECT_BUILD_DIR "${PROJECT_DIR}/build/" )
-  set(AOT_LIBRARY "${PROJECT_DIR}/build/lib/libapp.so" )
+#   # Published to parent scope for install step.
+#   set(FLUTTER_LIBRARY ${FLUTTER_LIBRARY} )
+#   set(FLUTTER_ICU_DATA_FILE "${EPHEMERAL_DIR}/icudtl.dat" )
+#   set(PROJECT_BUILD_DIR "${PROJECT_DIR}/build/" )
+#   set(AOT_LIBRARY "${PROJECT_DIR}/build/lib/libapp.so" )
 
-  list(APPEND FLUTTER_LIBRARY_HEADERS
-    "fl_basic_message_channel.h"
-    "fl_binary_codec.h"
-    "fl_binary_messenger.h"
-    "fl_dart_project.h"
-    "fl_engine.h"
-    "fl_json_message_codec.h"
-    "fl_json_method_codec.h"
-    "fl_message_codec.h"
-    "fl_method_call.h"
-    "fl_method_channel.h"
-    "fl_method_codec.h"
-    "fl_method_response.h"
-    "fl_plugin_registrar.h"
-    "fl_plugin_registry.h"
-    "fl_standard_message_codec.h"
-    "fl_standard_method_codec.h"
-    "fl_string_codec.h"
-    "fl_value.h"
-    "fl_view.h"
-    "flutter_linux.h"
-  )
-  list(PREPEND FLUTTER_LIBRARY_HEADERS "${EPHEMERAL_DIR}/flutter_linux/")
-  add_library(flutter INTERFACE)
-  target_include_directories(flutter INTERFACE
-    "${EPHEMERAL_DIR}"
-  )
-  target_link_libraries(flutter INTERFACE "${FLUTTER_LIBRARY}")
-  target_link_libraries(flutter INTERFACE
-    PkgConfig::GTK
-    PkgConfig::GLIB
-    PkgConfig::GIO
-  )
-  add_dependencies(flutter flutter_assemble)
+#   target_link_libraries(flutter INTERFACE "${FLUTTER_LIBRARY}")
+#   target_link_libraries(flutter INTERFACE
+#     PkgConfig::GTK
+#     PkgConfig::GLIB
+#     PkgConfig::GIO
+#   )
+#   add_dependencies(flutter flutter_assemble)
 
-else()
+# else()
 
-endif()
+# endif()
 
 
 # Apply a standard set of build settings that are configured in the
@@ -97,8 +70,55 @@ target_compile_definitions(${PLUGIN_NAME} PRIVATE FLUTTER_PLUGIN_IMPL)
 # dependencies here.
 target_include_directories(${PLUGIN_NAME} INTERFACE
   "${CMAKE_CURRENT_SOURCE_DIR}/include")
+
+set(FLUTTER_LIBRARY "${EPHEMERAL_DIR}/libflutter_linux_gtk.so")
+
+
+
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(GTK REQUIRED gtk+-3.0)
+list(APPEND FLUTTER_LIBRARY_HEADERS
+  "fl_basic_message_channel.h"
+  "fl_binary_codec.h"
+  "fl_binary_messenger.h"
+  "fl_dart_project.h"
+  "fl_engine.h"
+  "fl_json_message_codec.h"
+  "fl_json_method_codec.h"
+  "fl_message_codec.h"
+  "fl_method_call.h"
+  "fl_method_channel.h"
+  "fl_method_codec.h"
+  "fl_method_response.h"
+  "fl_plugin_registrar.h"
+  "fl_plugin_registry.h"
+  "fl_standard_message_codec.h"
+  "fl_standard_method_codec.h"
+  "fl_string_codec.h"
+  "fl_value.h"
+  "fl_view.h"
+  "flutter_linux.h"
+)
+list(PREPEND FLUTTER_LIBRARY_HEADERS "${EPHEMERAL_DIR}/flutter_linux/")
+add_library(flutter INTERFACE)
+target_include_directories(flutter INTERFACE
+  "${EPHEMERAL_DIR}"
+)
+target_link_libraries(flutter INTERFACE "${FLUTTER_LIBRARY}")
+target_link_libraries(flutter INTERFACE
+  PkgConfig::GTK
+  PkgConfig::GLIB
+  PkgConfig::GIO
+)
+add_dependencies(flutter flutter_assemble)
+
+# Print the GTK variables
+message(STATUS "GTK_INCLUDE_DIRS: ${GTK_INCLUDE_DIRS}")
+message(STATUS "GTK_LIBRARIES: ${GTK_LIBRARIES}")
+# Include GTK directories and link against GTK libraries
+target_include_directories(${PLUGIN_NAME} PRIVATE ${GTK_INCLUDE_DIRS})
+target_link_libraries(${PLUGIN_NAME} PRIVATE ${GTK_LIBRARIES})
 target_link_libraries(${PLUGIN_NAME} PRIVATE flutter)
-target_link_libraries(${PLUGIN_NAME} PRIVATE PkgConfig::GTK)
 
 
 if(!RustBuild)

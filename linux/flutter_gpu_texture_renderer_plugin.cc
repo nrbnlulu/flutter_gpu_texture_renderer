@@ -3,10 +3,14 @@
 #include <flutter_linux/flutter_linux.h>
 #include <gtk/gtk.h>
 #include <sys/utsname.h>
-
 #include <cstring>
+#include "include/flutter_gpu_texture_renderer/api.h"
 
 #include "flutter_gpu_texture_renderer_plugin_private.h"
+
+int take_five(){
+    return 5;
+}
 
 #define FLUTTER_GPU_TEXTURE_RENDERER_PLUGIN(obj) \
   (G_TYPE_CHECK_INSTANCE_CAST((obj), flutter_gpu_texture_renderer_plugin_get_type(), \

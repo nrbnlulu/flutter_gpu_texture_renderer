@@ -1,5 +1,1 @@
-
-
-int take_five() {
-    return 5;
-}
+int take_five();

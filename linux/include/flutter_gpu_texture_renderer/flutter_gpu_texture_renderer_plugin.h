@@ -1,7 +1,7 @@
 #ifndef FLUTTER_PLUGIN_FLUTTER_GPU_TEXTURE_RENDERER_PLUGIN_H_
 #define FLUTTER_PLUGIN_FLUTTER_GPU_TEXTURE_RENDERER_PLUGIN_H_
 
-#include <flutter_linux/flutter_linux.h>
+#include <flutter/flutter_linux.h>
 
 G_BEGIN_DECLS
 

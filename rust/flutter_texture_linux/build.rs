@@ -49,16 +49,20 @@ fn main() {
     }
     let root_linux_path = GIT_ROOT.join("linux");
     run_cmd("cmake", &cmake_args, Some(&root_linux_path));
+    println!("Running ninja");
+    run_cmd("cmake", &["--build", "./build"], Some(&root_linux_path));
+
     // find and link against the created C library
     println!(
         "cargo:rustc-link-search={}",
         root_linux_path.join("build").to_str().unwrap()
     );
-    println!("cargo:rustc-link-lib=flutter_gpu_texture_renderer_plugin");
+
+
+    println!("cargo:rustc-link-lib=libflutter_gpu_texture_renderer_plugin");
     let c_lib_api_header = root_linux_path.join("include/flutter_gpu_texture_renderer/api.h");
     // now link against flutter and friends
     println!("cargo:rustc-link-search={}", ephemeral_dir.to_str().unwrap());
-    println!("cargo:rustc-link-lib=flutter_linux_gtk");
 
 
     // The bindgen::Builder is the main entry point
