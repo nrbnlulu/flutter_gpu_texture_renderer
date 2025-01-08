@@ -1,7 +1,7 @@
 mod bindings;
 
 fn add_five(x: i32) -> i32 {
-    unsafe { x + bindings::take_five() }
+    unsafe { x + bindings::fltx_gpu_take_five() }
 }
 
 #[cfg(test)]

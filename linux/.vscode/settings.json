@@ -1,0 +1,6 @@
+{
+    "cmake.configureArgs": [
+        "-DRustBuild=ON",
+        "-DEPHEMERAL_DIR=../example/linux/flutter/ephemeral",
+    ]
+}

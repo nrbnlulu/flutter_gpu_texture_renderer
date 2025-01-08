@@ -1,10 +1,8 @@
 use lazy_static::lazy_static;
-use std::{
-    env,
-    path::{Path, PathBuf},
-};
+use std::path::{Path, PathBuf};
 
 fn run_cmd(cmd: &str, args: &[&str], cwd: Option<&PathBuf>) {
+    println!("\x1b[32mRunning command: {} {:?}\x1b[0m", cmd, args);
     let mut command = std::process::Command::new(cmd);
     command.args(args);
     if let Some(cwd) = cwd {
@@ -22,21 +20,15 @@ lazy_static! {
         .join("../..")
         .canonicalize()
         .unwrap();
-    static ref EXAMPLE_DIR: PathBuf = GIT_ROOT.join("example");
 }
 
 fn main() {
     let cwd = std::env::current_dir().unwrap();
     println!("CWD: {:?}", cwd.to_str());
     println!("GIT_ROOT: {:?}", GIT_ROOT.to_str());
-    println!("EXAMPLE_DIR: {:?}", EXAMPLE_DIR.to_str());
-    assert!(EXAMPLE_DIR.exists());
-    run_cmd(
-        "flutter",
-        &["build", "linux", "--release"],
-        Some(&EXAMPLE_DIR),
-    );
-    let ephemeral_dir = EXAMPLE_DIR.join("linux").join("flutter").join("ephemeral");
+
+    // let ephemeral_dir = EXAMPLE_DIR.join("linux").join("flutter").join("ephemeral");
+    let ephemeral_dir = Path::new("/home/dev/Documents/flutter_linux_3.24.0-stable/flutter/bin/cache/artifacts/engine/linux-x64");
     assert!(ephemeral_dir.exists());
     // now we can run cmake for the flutter_texture_linux
     // e.g cmake -B ./build -G Ninja -DRustBuild=ON -DEPHEMERAL_DIR=/home/dev/Desktop/OS/flutter_gpu_texture_renderer/example/linux/flutter/ephemeral
@@ -57,31 +49,19 @@ fn main() {
         "cargo:rustc-link-search={}",
         root_linux_path.join("build").to_str().unwrap()
     );
-
-
-    println!("cargo:rustc-link-lib=libflutter_gpu_texture_renderer_plugin");
+    println!("cargo:rustc-link-lib=flutter_gpu_texture_renderer_plugin");
+    
     let c_lib_api_header = root_linux_path.join("include/flutter_gpu_texture_renderer/api.h");
-    // now link against flutter and friends
-    println!("cargo:rustc-link-search={}", ephemeral_dir.to_str().unwrap());
-
-
-    // The bindgen::Builder is the main entry point
-    // to bindgen, and lets you build up options for
-    // the resulting bindings.
     let bindings = bindgen::Builder::default()
-        // The input header we would like to generate
-        // bindings for.
         .header(c_lib_api_header.to_str().unwrap())
         // Tell cargo to invalidate the built crate whenever any of the
         // included header files changed.
         .parse_callbacks(Box::new(bindgen::CargoCallbacks::new()))
-        // Finish the builder and generate the bindings.
         .generate()
-        // Unwrap the Result and panic on failure.
         .expect("Unable to generate bindings");
 
     // Write the bindings to the $OUT_DIR/bindings.rs file.
-    let out_path = bindings
+    let _ = bindings
         .write_to_file(cwd.join("src/bindings.rs"))
         .expect("Couldn't write bindings!");
 }
