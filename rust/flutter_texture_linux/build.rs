@@ -1,5 +1,6 @@
 use lazy_static::lazy_static;
 use std::path::{Path, PathBuf};
+extern crate pkg_config;
 
 fn run_cmd(cmd: &str, args: &[&str], cwd: Option<&PathBuf>) {
     println!("\x1b[32mRunning command: {} {:?}\x1b[0m", cmd, args);
@@ -50,6 +51,7 @@ fn main() {
     let c_lib_api_header = root_linux_path.join("include/flutter_gpu_texture_renderer/api.h");
     let bindings = bindgen::Builder::default()
         .header(c_lib_api_header.to_str().unwrap())
+        .clang_arg(&format!("-I{}", ephemeral_dir.to_str().unwrap()))
         // Tell cargo to invalidate the built crate whenever any of the
         // included header files changed.
         .parse_callbacks(Box::new(bindgen::CargoCallbacks::new()))

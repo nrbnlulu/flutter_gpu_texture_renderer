@@ -1,3 +1,6 @@
 {
-    "cmake.sourceDirectory": "/home/dev/Desktop/OS/flutter_gpu_texture_renderer/linux"
+    "cmake.sourceDirectory": "/home/dev/Desktop/OS/flutter_gpu_texture_renderer/linux",
+    "files.associations": {
+        "api.h": "c"
+    }
 }

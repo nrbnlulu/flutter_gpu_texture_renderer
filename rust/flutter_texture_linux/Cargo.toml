@@ -9,3 +9,4 @@ flutter_texture_core = { path = "../flutter_texture_core" }
 [build-dependencies]
 bindgen = { workspace = true }
 lazy_static = {workspace = true}
+pkg-config = "0.3.31"

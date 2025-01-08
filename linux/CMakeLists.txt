@@ -7,7 +7,6 @@ cmake_minimum_required(VERSION 3.10)
 set(PROJECT_NAME "flutter_gpu_texture_renderer")
 project(${PROJECT_NAME} LANGUAGES C)
 
-
 option(RustBuild "RustBuild" ON)
 set(EPHEMERAL_DIR "/home/dev/Documents/flutter_linux_3.24.0-stable/flutter/bin/cache/artifacts/engine/linux-x64" CACHE PATH "Path to the ephemeral directory")
 function(list_transform_prepend var prefix)
@@ -56,11 +55,10 @@ if(RustBuild)
     "flutter_linux.h"
   )
   list_transform_prepend(FLUTTER_LIBRARY_HEADERS "${EPHEMERAL_DIR}/flutter_linux/")
-
   add_library(flutter INTERFACE)
-  target_include_directories(flutter INTERFACE
-    "${EPHEMERAL_DIR}"
-  )
+  target_include_directories(flutter INTERFACE)
+  set_target_properties(flutter PROPERTIES
+  INCLUDE_DIRECTORIES ${EPHEMERAL_DIR})  
   target_link_libraries(flutter INTERFACE "${FLUTTER_LIBRARY}")
   target_link_libraries(flutter INTERFACE
     PkgConfig::GTK
@@ -74,7 +72,7 @@ if(RustBuild)
     ${FLUTTER_LIBRARY_HEADERS}
   )
   # ------------------------------------------------- END ---------------------------------------------------------------------
-  # ---------- mostly copied from the generated ./linux/CMakeLists.txt of flutter plugin ----------
+  # ---------- mostly copied from the generated ./linux/CMakeLists.txt of a flutter plugin ----------
   # This value is used when generating builds using this plugin, so it must
   # not be changed.
   set(PLUGIN_NAME "flutter_gpu_texture_renderer_plugin")
@@ -100,15 +98,17 @@ if(RustBuild)
   # Source include directories and library dependencies. Add any plugin-specific
   # dependencies here.
   target_include_directories(${PLUGIN_NAME} INTERFACE
-    "${CMAKE_CURRENT_SOURCE_DIR}/include")
+    "${CMAKE_CURRENT_SOURCE_DIR}/include"
+    ${EPHEMERAL_DIR}
+    
+    )
 
-  target_include_directories(${PLUGIN_NAME} PRIVATE
-    "${EPHEMERAL_DIR}"
+  target_link_libraries(${PLUGIN_NAME} PRIVATE 
+  flutter
+  PkgConfig::GTK
   )
-  target_link_libraries(${PLUGIN_NAME} PRIVATE flutter)
-  target_link_libraries(${PLUGIN_NAME} PRIVATE PkgConfig::GTK)
   add_dependencies(${PLUGIN_NAME} flutter_assemble)
-
+  include_directories(${EPHEMERAL_DIR})
 
   # ------------------------------------------------- END ---------------------------------------------------------------------
 
