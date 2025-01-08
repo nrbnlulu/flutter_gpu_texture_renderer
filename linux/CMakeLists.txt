@@ -5,24 +5,24 @@ cmake_minimum_required(VERSION 3.10)
 
 # Project-level configuration.
 set(PROJECT_NAME "flutter_gpu_texture_renderer")
-project(${PROJECT_NAME} LANGUAGES CXX)
+project(${PROJECT_NAME} LANGUAGES C)
 
 
 option(RustBuild "RustBuild" ON)
 set(EPHEMERAL_DIR "/home/dev/Documents/flutter_linux_3.24.0-stable/flutter/bin/cache/artifacts/engine/linux-x64" CACHE PATH "Path to the ephemeral directory")
 function(list_transform_prepend var prefix)
-    set(temp "")
-    foreach(f ${${var}})
-        list(APPEND temp "${prefix}${f}")
-    endforeach()
-    set(${var} "${temp}" PARENT_SCOPE)
+  set(temp "")
+  foreach(f ${${var}})
+    list(APPEND temp "${prefix}${f}")
+  endforeach()
+  set(${var} "${temp}" PARENT_SCOPE)
 endfunction()
 if(RustBuild)
   message("ephemeral is ${EPHEMERAL_DIR}")
   if(NOT EPHEMERAL_DIR)
     message(FATAL_ERROR "EPHEMERAL_DIR must be set when building with Rust")
   endif()
-# ---------- mostly copied from the generated cmake of example/linux/build/flutter/CMakeLists.txt ----------
+  # ---------- mostly copied from the generated cmake of example/linux/build/flutter/CMakeLists.txt ----------
   # === Flutter Library ===
   # System-level dependencies.
   find_package(PkgConfig REQUIRED)
@@ -70,18 +70,18 @@ if(RustBuild)
   add_dependencies(flutter flutter_assemble)
 
   add_custom_target(flutter_assemble DEPENDS
-  "${FLUTTER_LIBRARY}"
-  ${FLUTTER_LIBRARY_HEADERS}
-)
-# ------------------------------------------------- END ---------------------------------------------------------------------
-# ---------- mostly copied from the generated ./linux/CMakeLists.txt of flutter plugin ----------
+    "${FLUTTER_LIBRARY}"
+    ${FLUTTER_LIBRARY_HEADERS}
+  )
+  # ------------------------------------------------- END ---------------------------------------------------------------------
+  # ---------- mostly copied from the generated ./linux/CMakeLists.txt of flutter plugin ----------
   # This value is used when generating builds using this plugin, so it must
   # not be changed.
   set(PLUGIN_NAME "flutter_gpu_texture_renderer_plugin")
 
   # Any new source files that you add to the plugin should be added here.
   list(APPEND PLUGIN_SOURCES
-    "flutter_gpu_texture_renderer_plugin.cc"
+    "api.c"
   )
 
   # Define the plugin library target. Its name must not be changed (see comment
@@ -101,6 +101,7 @@ if(RustBuild)
   # dependencies here.
   target_include_directories(${PLUGIN_NAME} INTERFACE
     "${CMAKE_CURRENT_SOURCE_DIR}/include")
+
   target_include_directories(${PLUGIN_NAME} PRIVATE
     "${EPHEMERAL_DIR}"
   )
@@ -109,9 +110,7 @@ if(RustBuild)
   add_dependencies(${PLUGIN_NAME} flutter_assemble)
 
 
-# ------------------------------------------------- END ---------------------------------------------------------------------
-add_executable(something main.cc)
-target_link_libraries(something PRIVATE ${PLUGIN_NAME})
+  # ------------------------------------------------- END ---------------------------------------------------------------------
 
 
 else()

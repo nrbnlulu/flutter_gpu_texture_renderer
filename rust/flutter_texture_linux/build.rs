@@ -29,10 +29,7 @@ fn main() {
 
     // let ephemeral_dir = EXAMPLE_DIR.join("linux").join("flutter").join("ephemeral");
     let ephemeral_dir = Path::new("/home/dev/Documents/flutter_linux_3.24.0-stable/flutter/bin/cache/artifacts/engine/linux-x64");
-    assert!(ephemeral_dir.exists());
-    // now we can run cmake for the flutter_texture_linux
-    // e.g cmake -B ./build -G Ninja -DRustBuild=ON -DEPHEMERAL_DIR=/home/dev/Desktop/OS/flutter_gpu_texture_renderer/example/linux/flutter/ephemeral
-    let mut cmake_args = vec!["-B", "./build", "-G", "Ninja", "-DRustBuild=ON"];
+    let mut cmake_args = vec!["-B", "./build", "-DRustBuild=ON"];
     let eph_arg = format!("-DEPHEMERAL_DIR={}", ephemeral_dir.to_str().unwrap());
     cmake_args.push(eph_arg.as_str());
 
@@ -50,7 +47,6 @@ fn main() {
         root_linux_path.join("build").to_str().unwrap()
     );
     println!("cargo:rustc-link-lib=flutter_gpu_texture_renderer_plugin");
-    
     let c_lib_api_header = root_linux_path.join("include/flutter_gpu_texture_renderer/api.h");
     let bindings = bindgen::Builder::default()
         .header(c_lib_api_header.to_str().unwrap())
